@@ -19,20 +19,23 @@ class Geo_ip
 	public function __construct( $config = array() )
 	{
 		$_driver		= ! empty( $config['driver'] ) ? $config['driver'] : 'Nails_ip_services';
-		$_driver_path	= ! empty( $config['driver_path'] ) ? $config['driver_path'] : FCPATH . '/vendor/nailsapp/module-geo-ip/_resources/geoip_drivers/';
+		$_driver		= ucfirst( strtolower( $_driver ) );
+
+		$_driver_path	= ! empty( $config['driver_path'] ) ? $config['driver_path'] : FCPATH . 'vendor/nailsapp/module-geo-ip/geo_ip/_resources/drivers/';
 		$_driver_path	.= substr( $_driver_path, -1 ) != '/' ? '/' : '';
+
 		$_driver_config	= ! empty( $config['driver_config'] ) ? (array) $config['driver_config'] : array();
 
-		if ( file_exists( $_driver_path . ucfirst( strtolower( $_driver ) ) . '.php' ) ) :
+		if ( file_exists( $_driver_path . $_driver . '.php' ) ) :
 
-			require_once $_driver_path . ucfirst( strtolower( $_driver ) ) . '.php';
+			require_once $_driver_path . $_driver . '.php';
 
 			$_class = 'Geo_ip_driver_' . $_driver;
 			$this->_driver = new $_class( $_driver_config );
 
 		else :
 
-			show_error( $_driver_path . ucfirst( strtolower( $_driver ) ) . '.php is not a valid Geo_ip driver' );
+			show_error( $_driver_path . $_driver . '.php is not a valid Geo_ip driver' );
 
 		endif;
 	}
