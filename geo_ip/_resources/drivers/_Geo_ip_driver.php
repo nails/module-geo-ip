@@ -63,16 +63,22 @@ class NAILS_Geo_ip_driver
 		endif;
 	}
 
-	// --------------------------------------------------------------------------
+
+	/**
+	 * --------------------------------------------------------------------------
+	 *
+	 * ERROR METHODS
+	 * These methods provide a consistent interface for setting and retrieving
+	 * errors which are generated.
+	 *
+	 * --------------------------------------------------------------------------
+	 **/
 
 
 	/**
 	 * Set a generic error
-	 *
-	 * @access	protected
-	 * @param	string	$error	The error message
-	 * @return	void
-	 **/
+	 * @param string $error The error message
+	 */
 	protected function _set_error( $error )
 	{
 		$this->_errors[] = $error;
@@ -83,11 +89,9 @@ class NAILS_Geo_ip_driver
 
 
 	/**
-	 * Get any errors
-	 *
-	 * @access	public
-	 * @return	array
-	 **/
+	 * Return the error array
+	 * @return array
+	 */
 	public function get_errors()
 	{
 		return $this->_errors;
@@ -98,14 +102,38 @@ class NAILS_Geo_ip_driver
 
 
 	/**
-	 * Get last error
-	 *
-	 * @access	public
-	 * @return	mixed
-	 **/
+	 * Returns the last error
+	 * @return string
+	 */
 	public function last_error()
 	{
 		return end( $this->_errors );
+	}
+
+
+	// --------------------------------------------------------------------------
+
+
+	/**
+	 * Clears the last error
+	 * @return mixed
+	 */
+	public function clear_last_error()
+	{
+		return array_pop( $this->_errors );
+	}
+
+
+	// --------------------------------------------------------------------------
+
+
+	/**
+	 * Clears all errors
+	 * @return void
+	 */
+	public function clear_errors()
+	{
+		$this->_errors = array();
 	}
 
 
