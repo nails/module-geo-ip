@@ -1,36 +1,43 @@
 {
-	"name": "nailsapp/module-geo-ip",
-	"keywords":
-	[
-		"Nails",
-		"Shed Collective",
-		"CodeIgniter",
-		"GEO-IP Module"
-	],
-	"homepage": "http://nailsapp.co.uk/modules/geo-ip",
-	"description": "This the \"GEO-IP\" module for Nails.",
-	"license": "MIT",
-	"authors":
-	[
-		{
-			"name": "Pablo de la Pena",
-			"email": "p@shedcollective.org",
-			"homepage": "http://shedcollective.org",
-			"role": "Developer"
-		},
-		{
-			"name": "Gary Duncan",
-			"email": "g@shedcollective.org",
-			"homepage": "http://shedcollective.org",
-			"role": "Developer"
-		}
-	],
-	"support":
-	{
-		"email": "hello@shedcollective.org"
-	},
-	"require":
-	{
-		"nailsapp/module-curl": "dev-develop"
-	}
+    "name": "nailsapp/module-geo-ip",
+    "keywords":
+    [
+        "Nails",
+        "Shed Collective",
+        "CodeIgniter",
+        "GEO-IP Module"
+    ],
+    "homepage": "http://nailsapp.co.uk/modules/geo-ip",
+    "description": "This is the \"GEO-IP\" module for Nails.",
+    "license": "MIT",
+    "authors":
+    [
+        {
+            "name": "Pablo de la Pena",
+            "email": "p@shedcollective.org",
+            "homepage": "http://shedcollective.org",
+            "role": "Developer"
+        },
+        {
+            "name": "Gary Duncan",
+            "email": "g@shedcollective.org",
+            "homepage": "http://shedcollective.org",
+            "role": "Developer"
+        }
+    ],
+    "support":
+    {
+        "email": "hello@shedcollective.org"
+    },
+    "require":
+    {
+        "nailsapp/module-curl": "dev-develop"
+    },
+    "extra":
+    {
+        "nails" :
+        {
+            "type": "module"
+        }
+    }
 }
