@@ -37,6 +37,7 @@
     {
         "nails" :
         {
+            "moduleName": "geo_ip",
             "type": "module"
         }
     }
