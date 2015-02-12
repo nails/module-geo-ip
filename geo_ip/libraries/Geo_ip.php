@@ -1,59 +1,57 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 
 /**
-* Name:			Geo_ip
-*
-* Description:	Gateway to the FreeAgent API wrapper provided by HostLikeToast
-*
-*/
+ * This class abstracts access to the GeoIP service
+ *
+ * @package     Nails
+ * @subpackage  module-geo-ip
+ * @category    Library
+ * @author      Nails Dev Team
+ * @link
+ * @todo        Update this library to be a little mroe comprehensive, like the CDN library
+ */
 
 class Geo_ip
 {
-	private $_ip;
-	private $_driver;
+    private $driver;
 
+    // --------------------------------------------------------------------------
 
-	// --------------------------------------------------------------------------
+    public function __construct($config = array())
+    {
+        $driver = ! empty($config['driver']) ? $config['driver'] : 'Nails_ip_services';
+        $driver = ucfirst(strtolower($driver));
 
+        $driverPath  = ! empty($config['driver_path']) ? $config['driver_path'] : FCPATH . 'vendor/nailsapp/module-geo-ip/geo_ip/_resources/drivers/';
+        $driverPath .= substr($driverPath, -1) != '/' ? '/' : '';
 
-	public function __construct( $config = array() )
-	{
-		$_driver		= ! empty( $config['driver'] ) ? $config['driver'] : 'Nails_ip_services';
-		$_driver		= ucfirst( strtolower( $_driver ) );
+        $driverConfig = ! empty($config['driver_config']) ? (array) $config['driver_config'] : array();
 
-		$_driver_path	= ! empty( $config['driver_path'] ) ? $config['driver_path'] : FCPATH . 'vendor/nailsapp/module-geo-ip/geo_ip/_resources/drivers/';
-		$_driver_path	.= substr( $_driver_path, -1 ) != '/' ? '/' : '';
+        if (file_exists($driverPath . $driver . '.php')) {
 
-		$_driver_config	= ! empty( $config['driver_config'] ) ? (array) $config['driver_config'] : array();
+            require_once $driverPath . $driver . '.php';
 
-		if ( file_exists( $_driver_path . $_driver . '.php' ) ) :
+            $class = 'Geo_ip_driver_' . $driver;
+            $this->driver = new $class($driverConfig);
 
-			require_once $_driver_path . $_driver . '.php';
+        } else {
 
-			$_class = 'Geo_ip_driver_' . $_driver;
-			$this->_driver = new $_class( $_driver_config );
+            showFatalError($driverPath . $driver . '.php is not a valid Geo_ip driver');
+        }
+    }
 
-		else :
+    // --------------------------------------------------------------------------
 
-			show_error( $_driver_path . $_driver . '.php is not a valid Geo_ip driver' );
+    public function __call($method, $arguments)
+    {
+        if (method_exists($this->driver, $method)) :
 
-		endif;
-	}
+            return call_user_func_array(array($this->driver, $method), $arguments);
 
+        else :
 
-	// --------------------------------------------------------------------------
+            throw new Exception('<strong>Fatal error</strong>: Call to undefined method Geo_ip::' . $method . '()');
 
-
-	public function __call( $method, $arguments )
-	{
-		if ( method_exists( $this->_driver, $method ) ) :
-
-			return call_user_func_array( array( $this->_driver, $method ), $arguments );
-
-		else :
-
-			throw new Exception( '<strong>Fatal error</strong>: Call to undefined method Geo_ip::' . $method . '()' );
-
-		endif;
-	}
+        endif;
+    }
 }

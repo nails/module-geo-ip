@@ -1,20 +1,22 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 
 /**
- * Name:			NAILS_Geo_ip_driver
- * Description:	Base class for Geo_ip drivers
+ * Common controller for all GeoIP drivers
+ *
+ * @package     Nails
+ * @subpackage  module-geo-ip
+ * @category    Driver
+ * @author      Nails Dev Team
+ * @link
  */
 
 class NAILS_Geo_ip_driver
 {
-	//	Class traits
-	use NAILS_COMMON_TRAIT_ERROR_HANDLING;
-	use NAILS_COMMON_TRAIT_CACHING;
+    //  Class traits
+    use NAILS_COMMON_TRAIT_ERROR_HANDLING;
+    use NAILS_COMMON_TRAIT_CACHING;
 
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
 
-	public function __construct(){}
+    public function __construct(){}
 }
-
-/* End of file _Geo_ip_driver.php */
-/* Location: ./module-auth/auth/libraries/_Geo_ip_driver.php */
