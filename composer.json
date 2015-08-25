@@ -1,12 +1,6 @@
 {
     "name": "nailsapp/module-geo-ip",
-    "keywords":
-    [
-        "Nails",
-        "Shed Collective",
-        "CodeIgniter",
-        "GEO-IP Module"
-    ],
+    "keywords": ["Nails", "Shed Collective", "CodeIgniter", "GEO-IP Module"],
     "homepage": "http://nailsapp.co.uk/modules/geo-ip",
     "description": "This is the \"GEO-IP\" module for Nails.",
     "license": "MIT",
