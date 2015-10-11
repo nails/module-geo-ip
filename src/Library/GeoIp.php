@@ -31,7 +31,7 @@ class GeoIp
         //  Load the storage driver
         $sDriverClassName = defined('APP_GEOIP_DRIVER') ? ucfirst(strtolower(APP_GEOIP_DRIVER)) : 'Nails';
         $sDriverClassName = '\Nails\GeoIp\Driver\\' . $sDriverClassName;
-        
+
         //  Test if class exists
         if (!class_exists($sDriverClassName)) {
 
@@ -58,9 +58,30 @@ class GeoIp
      * @param string $sIp The IP to get details for
      * @return \stdClass
      */
-    public function lookup($sIp)
+    public function lookup($sIp = '')
     {
+        $sIp = trim($sIp);
+
+        if (empty($sIp) && !empty($_SERVER['REMOTE_ADDR'])) {
+
+            $sIp = $_SERVER['REMOTE_ADDR'];
+        }
+
+        if (!empty($this->aCache[$sIp])) {
+
+            return $this->aCache[$sIp];
+        }
+
         $this->aCache[$sIp] = $this->oDriver->lookup($sIp);
+
+        if (!($this->aCache[$sIp] instanceof \Nails\GeoIp\Result\Ip)) {
+
+            throw new GeoIpException(
+                'Geo IP Driver did not return a \Nails\GeoIp\Result\Ip result',
+                3
+            );
+        }
+
         return $this->aCache[$sIp];
     }
 
@@ -71,14 +92,33 @@ class GeoIp
      * @param string $sIp The IP to get the city detail for
      * @return string|null
      */
-    public function city($sIp)
+    public function hostname($sIp = '')
     {
-        if (!empty($this->aCache[$sIp]->city)) {
+        return $this->lookup($sIp)->getHostname();
+    }
 
-            $this->lookup($sIp);
-        }
+    // --------------------------------------------------------------------------
 
-        return !empty($this->aCache[$sIp]->city) ? $this->aCache[$sIp]->city : null;
+    /**
+     * Return the city where an IP address resides
+     * @param string $sIp The IP to get the city detail for
+     * @return string|null
+     */
+    public function city($sIp = '')
+    {
+        return $this->lookup($sIp)->getCity();
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Return the region where an IP address resides
+     * @param string $sIp The IP to get the region detail for
+     * @return string|null
+     */
+    public function region($sIp = '')
+    {
+        return $this->lookup($sIp)->getRegion();
     }
 
     // --------------------------------------------------------------------------
@@ -88,13 +128,20 @@ class GeoIp
      * @param string $sIp The IP to get the country detail for
      * @return string|null
      */
-    public function country($sIp)
+    public function country($sIp = '')
     {
-        if (!empty($this->aCache[$sIp]->country)) {
+        return $this->lookup($sIp)->getCountry();
+    }
 
-            $this->lookup($sIp);
-        }
+    // --------------------------------------------------------------------------
 
-        return !empty($this->aCache[$sIp]->country) ? $this->aCache[$sIp]->country: null;
+    /**
+     * Return the lat/long coordinates of where an IP address resides
+     * @param string $sIp The IP to get lat/long coordinates for
+     * @return array
+     */
+    public function latLng($sIp = '')
+    {
+        return $this->lookup($sIp)->getLatLng();
     }
 }
