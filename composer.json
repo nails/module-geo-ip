@@ -2,7 +2,7 @@
     "name": "nailsapp/module-geo-ip",
     "keywords": ["Nails", "Shed Collective", "CodeIgniter", "GEO-IP Module"],
     "homepage": "http://nailsapp.co.uk/modules/geo-ip",
-    "description": "This is the \"GEO-IP\" module for Nails.",
+    "description": "This is the \"GeoIP\" module for Nails.",
     "license": "MIT",
     "authors":
     [
@@ -27,7 +27,16 @@
     "prefer-stable": true,
     "require":
     {
-        "nailsapp/module-curl": "dev-develop"
+        "nailsapp/common": "dev-develop",
+        "nailsapp/driver-geo-ip-nails": "dev-develop"
+    },
+    "require-dev":
+    {
+        "phpunit/phpunit": "4.*"
+    },
+    "autoload":
+    {
+        "psr-4": {"Nails\\GeoIp\\": "src/"}
     },
     "extra":
     {
