@@ -7,7 +7,7 @@ return array(
         }
     ),
     'factories' => array(
-        'Ip' => function() {
+        'Ip' => function () {
             return new \Nails\GeoIp\Result\Ip();
         }
     )

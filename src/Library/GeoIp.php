@@ -17,6 +17,10 @@ use Nails\GeoIp\Exception\GeoIpException;
 
 class GeoIp
 {
+    use \Nails\Common\Traits\Caching;
+
+    // --------------------------------------------------------------------------
+
     private $oDriver;
     private $aCache;
 
@@ -48,7 +52,6 @@ class GeoIp
         }
 
         $this->oDriver = new $sDriverClassName($this);
-        $this->aCache  = array();
     }
 
     // --------------------------------------------------------------------------
@@ -67,14 +70,16 @@ class GeoIp
             $sIp = $_SERVER['REMOTE_ADDR'];
         }
 
-        if (!empty($this->aCache[$sIp])) {
+        $oCache = $this->_get_cache($sIp);
 
-            return $this->aCache[$sIp];
+        if (!empty($oCache)) {
+
+            return $oCache;
         }
 
-        $this->aCache[$sIp] = $this->oDriver->lookup($sIp);
+        $oIp = $this->oDriver->lookup($sIp);
 
-        if (!($this->aCache[$sIp] instanceof \Nails\GeoIp\Result\Ip)) {
+        if (!($oIp instanceof \Nails\GeoIp\Result\Ip)) {
 
             throw new GeoIpException(
                 'Geo IP Driver did not return a \Nails\GeoIp\Result\Ip result',
@@ -82,14 +87,28 @@ class GeoIp
             );
         }
 
-        return $this->aCache[$sIp];
+        $this->_set_cache($sIp, $oIp);
+
+        return $oIp;
     }
 
     // --------------------------------------------------------------------------
 
     /**
-     * Return the city where an IP address resides
-     * @param string $sIp The IP to get the city detail for
+     * Return the IP property of a lookup
+     * @param string $sIp The IP to look up
+     * @return string|null
+     */
+    public function ip($sIp)
+    {
+        return $this->lookup($sIp)->getIp();
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Return the hostname property of a lookup
+     * @param string $sIp The IP to look up
      * @return string|null
      */
     public function hostname($sIp = '')
@@ -100,8 +119,8 @@ class GeoIp
     // --------------------------------------------------------------------------
 
     /**
-     * Return the city where an IP address resides
-     * @param string $sIp The IP to get the city detail for
+     * Return the city property of a lookup
+     * @param string $sIp The IP to look up
      * @return string|null
      */
     public function city($sIp = '')
@@ -112,8 +131,8 @@ class GeoIp
     // --------------------------------------------------------------------------
 
     /**
-     * Return the region where an IP address resides
-     * @param string $sIp The IP to get the region detail for
+     * Return the region property of a lookup
+     * @param string $sIp The IP to look up
      * @return string|null
      */
     public function region($sIp = '')
@@ -124,8 +143,8 @@ class GeoIp
     // --------------------------------------------------------------------------
 
     /**
-     * Return the country where an IP address resides
-     * @param string $sIp The IP to get the country detail for
+     * Return the country property of a lookup
+     * @param string $sIp The IP to look up
      * @return string|null
      */
     public function country($sIp = '')
@@ -136,12 +155,36 @@ class GeoIp
     // --------------------------------------------------------------------------
 
     /**
-     * Return the lat/long coordinates of where an IP address resides
-     * @param string $sIp The IP to get lat/long coordinates for
-     * @return array
+     * Return the latLng property of a lookup
+     * @param string $sIp The IP to look up
+     * @return string|null
      */
     public function latLng($sIp = '')
     {
         return $this->lookup($sIp)->getLatLng();
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Return the lat property of a lookup
+     * @param string $sIp The IP to look up
+     * @return string|null
+     */
+    public function lat($sIp = '')
+    {
+        return $this->lookup($sIp)->getLat();
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Return the lng property of a lookup
+     * @param string $sIp The IP to look up
+     * @return string|null
+     */
+    public function lng($sIp = '')
+    {
+        return $this->lookup($sIp)->getLng();
     }
 }
