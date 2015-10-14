@@ -17,7 +17,7 @@ use Nails\GeoIp\Exception\GeoIpException;
 
 class GeoIp
 {
-    use \Nails\Common\Traits\Caching;
+    use Nails\Common\Traits\Caching;
 
     // --------------------------------------------------------------------------
 
