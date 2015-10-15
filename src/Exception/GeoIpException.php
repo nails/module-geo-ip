@@ -2,6 +2,8 @@
 
 namespace Nails\GeoIp\Exception;
 
-class GeoIpException extends \Exception
+use Nails\Common\Exception\NailsException;
+
+class GeoIpException extends NailsException
 {
 }
