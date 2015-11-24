@@ -70,7 +70,7 @@ class GeoIp
             $sIp = $_SERVER['REMOTE_ADDR'];
         }
 
-        $oCache = $this->_get_cache($sIp);
+        $oCache = $this->getCache($sIp);
 
         if (!empty($oCache)) {
 
@@ -87,7 +87,7 @@ class GeoIp
             );
         }
 
-        $this->_set_cache($sIp, $oIp);
+        $this->setCache($sIp, $oIp);
 
         return $oIp;
     }
