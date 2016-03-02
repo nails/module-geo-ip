@@ -43,7 +43,8 @@
         "nails" :
         {
             "moduleName": "geoip",
-            "type": "module"
+            "type": "module",
+            "namespace": "Nails\\GeoIp\\"
         }
     }
 }
