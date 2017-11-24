@@ -12,7 +12,6 @@
 
 namespace Nails\GeoIp\Result;
 
-
 class Ip
 {
     private $sIp;
@@ -27,6 +26,7 @@ class Ip
 
     /**
      * Define the IP object
+     *
      * @param string $sIp
      * @param string $sHostname
      * @param string $sCity
@@ -43,8 +43,7 @@ class Ip
         $sCountry = '',
         $sLat = '',
         $sLng = ''
-    )
-    {
+    ) {
         $this->sIp       = $sIp;
         $this->sHostname = $sHostname;
         $this->sCity     = $sCity;
@@ -58,7 +57,9 @@ class Ip
 
     /**
      * Set the IP property
+     *
      * @param string $sIp The IP to set
+     *
      * @return $this
      */
     public function setIp($sIp)
@@ -82,7 +83,9 @@ class Ip
 
     /**
      * Set the hostname property
+     *
      * @param string $sHostname The hostname to set
+     *
      * @return $this
      */
     public function setHostname($sHostname)
@@ -106,7 +109,9 @@ class Ip
 
     /**
      * Set the City property
+     *
      * @param string $sCity The city to set
+     *
      * @return $this
      */
     public function setCity($sCity)
@@ -130,7 +135,9 @@ class Ip
 
     /**
      * Set the Region property
+     *
      * @param string $sRegion The region to set
+     *
      * @return $this
      */
     public function setRegion($sRegion)
@@ -154,7 +161,9 @@ class Ip
 
     /**
      * Set the Country property
+     *
      * @param string $sCountry The Country to set
+     *
      * @return $this
      */
     public function setCountry($sCountry)
@@ -178,8 +187,10 @@ class Ip
 
     /**
      * Set the IP's Latitude and Longitude
+     *
      * @param string $sLat The IP's Latitude
      * @param string $sLng The IP's Longitude
+     *
      * @return $this
      */
     public function setLatLng($sLat, $sLng)
@@ -193,7 +204,9 @@ class Ip
 
     /**
      * Set the Latitude property
+     *
      * @param string $sLat The Latitude to set
+     *
      * @return $this
      */
     public function setLat($sLat)
@@ -217,7 +230,9 @@ class Ip
 
     /**
      * Set the Longitude property
+     *
      * @param string $sLng The Longitude to set
+     *
      * @return $this
      */
     public function setLng($sLng)
@@ -245,7 +260,7 @@ class Ip
      */
     public function getLatLng()
     {
-        $oLatLng = new \stdClass();
+        $oLatLng      = new \stdClass();
         $oLatLng->lat = $this->sLat;
         $oLatLng->lng = $this->sLng;
 

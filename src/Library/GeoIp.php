@@ -8,22 +8,22 @@
  * @category    Library
  * @author      Nails Dev Team
  * @link
- * @todo        Update this library to be a little more comprehensive, like the CDN library
  */
 
 namespace Nails\GeoIp\Library;
 
-use Nails\GeoIp\Exception\GeoIpException;
+use Nails\Common\Traits\Caching;
 use Nails\GeoIp\Exception\GeoIpDriverException;
+use Nails\GeoIp\Exception\GeoIpException;
+use Nails\GeoIp\Result\Ip;
 
 class GeoIp
 {
-    use \Nails\Common\Traits\Caching;
+    use Caching;
 
     // --------------------------------------------------------------------------
 
     protected $oDriver;
-    protected $aCache;
 
     // --------------------------------------------------------------------------
 
@@ -33,7 +33,7 @@ class GeoIp
 
     /**
      * Construct the Library, test that the driver is valid
-     * @throws GeoIpException
+     * @throws GeoIpDriverException
      */
     public function __construct()
     {
@@ -43,7 +43,7 @@ class GeoIp
         $aDrivers = _NAILS_GET_DRIVERS('nailsapp/module-geo-ip');
         $oDriver  = null;
 
-        for ($i=0; $i < count($aDrivers); $i++) {
+        for ($i = 0; $i < count($aDrivers); $i++) {
             if ($aDrivers[$i]->slug == $sSlug) {
                 $oDriver = $aDrivers[$i];
                 break;
@@ -73,33 +73,30 @@ class GeoIp
 
     /**
      * Return all information about a given IP
+     *
      * @param string $sIp The IP to get details for
-     * @return \stdClass
+     *
+     * @throws GeoIpException
+     * @return \Nails\GeoIp\Result\Ip
      */
     public function lookup($sIp = '')
     {
         $sIp = trim($sIp);
 
         if (empty($sIp) && !empty($_SERVER['REMOTE_ADDR'])) {
-
             $sIp = $_SERVER['REMOTE_ADDR'];
         }
 
         $oCache = $this->getCache($sIp);
 
         if (!empty($oCache)) {
-
             return $oCache;
         }
 
         $oIp = $this->oDriver->lookup($sIp);
 
-        if (!($oIp instanceof \Nails\GeoIp\Result\Ip)) {
-
-            throw new GeoIpException(
-                'Geo IP Driver did not return a \Nails\GeoIp\Result\Ip result',
-                3
-            );
+        if (!($oIp instanceof Ip)) {
+            throw new GeoIpException('Geo IP Driver did not return a \Nails\GeoIp\Result\Ip result', 3);
         }
 
         $this->setCache($sIp, $oIp);
@@ -111,7 +108,9 @@ class GeoIp
 
     /**
      * Return the IP property of a lookup
+     *
      * @param string $sIp The IP to look up
+     *
      * @return string|null
      */
     public function ip($sIp)
@@ -123,7 +122,9 @@ class GeoIp
 
     /**
      * Return the hostname property of a lookup
+     *
      * @param string $sIp The IP to look up
+     *
      * @return string|null
      */
     public function hostname($sIp = '')
@@ -135,7 +136,9 @@ class GeoIp
 
     /**
      * Return the city property of a lookup
+     *
      * @param string $sIp The IP to look up
+     *
      * @return string|null
      */
     public function city($sIp = '')
@@ -147,7 +150,9 @@ class GeoIp
 
     /**
      * Return the region property of a lookup
+     *
      * @param string $sIp The IP to look up
+     *
      * @return string|null
      */
     public function region($sIp = '')
@@ -159,7 +164,9 @@ class GeoIp
 
     /**
      * Return the country property of a lookup
+     *
      * @param string $sIp The IP to look up
+     *
      * @return string|null
      */
     public function country($sIp = '')
@@ -171,7 +178,9 @@ class GeoIp
 
     /**
      * Return the latLng property of a lookup
+     *
      * @param string $sIp The IP to look up
+     *
      * @return string|null
      */
     public function latLng($sIp = '')
@@ -183,7 +192,9 @@ class GeoIp
 
     /**
      * Return the lat property of a lookup
+     *
      * @param string $sIp The IP to look up
+     *
      * @return string|null
      */
     public function lat($sIp = '')
@@ -195,7 +206,9 @@ class GeoIp
 
     /**
      * Return the lng property of a lookup
+     *
      * @param string $sIp The IP to look up
+     *
      * @return string|null
      */
     public function lng($sIp = '')
