@@ -37,9 +37,25 @@ class GeoIp
      */
     public function __construct()
     {
+        $this->oDriver = $this->getDriverInstance();
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Returns an instance of the driver
+     *
+     * @param  string $sSlug The driver's slug
+     *
+     * @return Nails\GeoIp\Interfaces\Driver
+     */
+    public function getDriverInstance($sSlug = null)
+    {
         //  Load the driver
         // @todo: build a settings interface for setting and configuring the driver.
-        $sSlug    = defined('APP_GEO_IP_DRIVER') ? strtolower(APP_GEO_IP_DRIVER) : self::DEFAULT_DRIVER;
+        if (empty($sSlug)) {
+            $sSlug = defined('APP_GEO_IP_DRIVER') ? strtolower(APP_GEO_IP_DRIVER) : self::DEFAULT_DRIVER;
+        }
         $aDrivers = _NAILS_GET_DRIVERS('nailsapp/module-geo-ip');
         $oDriver  = null;
 
@@ -59,14 +75,13 @@ class GeoIp
         //  Ensure driver implements the correct interface
         $sInterfaceName = 'Nails\GeoIp\Interfaces\Driver';
         if (!in_array($sInterfaceName, class_implements($sDriverClass))) {
-
             throw new GeoIpDriverException(
                 '"' . $sDriverClass . '" must implement ' . $sInterfaceName,
                 2
             );
         }
 
-        $this->oDriver = _NAILS_GET_DRIVER_INSTANCE($oDriver);
+        return _NAILS_GET_DRIVER_INSTANCE($oDriver);
     }
 
     // --------------------------------------------------------------------------
