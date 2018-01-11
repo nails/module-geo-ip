@@ -47,7 +47,8 @@ class GeoIp
      *
      * @param  string $sSlug The driver's slug
      *
-     * @return Nails\GeoIp\Interfaces\Driver
+     * @throws GeoIpDriverException
+     * @return \Nails\GeoIp\Interfaces\Driver
      */
     public function getDriverInstance($sSlug = null)
     {
