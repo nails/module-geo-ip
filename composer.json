@@ -29,7 +29,7 @@
     {
         "nailsapp/common": "dev-develop",
         "nailsapp/driver-geo-ip-ipinfo": "dev-develop",
-        "nailsapp/driver-geo-ip-freegeoip": "dev-develop",
+        "nailsapp/driver-geo-ip-freegeoip": "dev-develop"
     },
     "require-dev":
     {
