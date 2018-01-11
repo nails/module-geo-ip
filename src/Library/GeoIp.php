@@ -27,7 +27,7 @@ class GeoIp
 
     // --------------------------------------------------------------------------
 
-    const DEFAULT_DRIVER = 'nailsapp/driver-geo-ip-nails';
+    const DEFAULT_DRIVER = 'nailsapp/driver-geo-ip-ipinfo';
 
     // --------------------------------------------------------------------------
 
