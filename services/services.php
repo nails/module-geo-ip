@@ -1,16 +1,16 @@
 <?php
 
-return array(
-    'services' => array(
+return [
+    'services' => [
         'GeoIp' => function () {
-            if (class_exists('\App\GeoIp\Library\GeoIp')) {
-                return new \App\GeoIp\Library\GeoIp();
+            if (class_exists('\App\GeoIp\Service\GeoIp')) {
+                return new \App\GeoIp\Service\GeoIp();
             } else {
-                return new \Nails\GeoIp\Library\GeoIp();
+                return new \Nails\GeoIp\Service\GeoIp();
             }
         }
-    ),
-    'factories' => array(
+    ],
+    'factories' => [
         'Ip' => function () {
             if (class_exists('\App\GeoIp\Result\Ip')) {
                 return new \App\GeoIp\Result\Ip();
@@ -18,5 +18,5 @@ return array(
                 return new \Nails\GeoIp\Result\Ip();
             }
         }
-    )
-);
+    ]
+];

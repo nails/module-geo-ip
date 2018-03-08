@@ -10,7 +10,7 @@
  * @link
  */
 
-namespace Nails\GeoIp\Library;
+namespace Nails\GeoIp\Service;
 
 use Nails\Common\Traits\Caching;
 use Nails\GeoIp\Exception\GeoIpDriverException;
@@ -32,7 +32,7 @@ class GeoIp
     // --------------------------------------------------------------------------
 
     /**
-     * Construct the Library, test that the driver is valid
+     * Construct the Service, test that the driver is valid
      * @throws GeoIpDriverException
      */
     public function __construct()
