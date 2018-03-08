@@ -1,6 +1,6 @@
 <?php
 
-namespace Nails\GeoIp\Library;
+namespace Nails\GeoIp\Service;
 
 class GeoIpTest extends \PHPUnit_Framework_TestCase
 {
