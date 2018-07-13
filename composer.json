@@ -27,9 +27,7 @@
     "prefer-stable": true,
     "require":
     {
-        "nailsapp/common": "dev-develop",
-        "nailsapp/driver-geo-ip-ipinfo": "dev-develop",
-        "nailsapp/driver-geo-ip-freegeoip": "dev-develop"
+        "nailsapp/common": "dev-develop"
     },
     "require-dev":
     {

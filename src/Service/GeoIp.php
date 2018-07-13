@@ -23,11 +23,11 @@ class GeoIp
 
     // --------------------------------------------------------------------------
 
+    /**
+     * The Driver instance
+     * @var Nails\GeoIp\Interfaces\Driver
+     */
     protected $oDriver;
-
-    // --------------------------------------------------------------------------
-
-    const DEFAULT_DRIVER = 'nailsapp/driver-geo-ip-freegeoip';
 
     // --------------------------------------------------------------------------
 
@@ -55,8 +55,13 @@ class GeoIp
         //  Load the driver
         // @todo: build a settings interface for setting and configuring the driver.
         if (empty($sSlug)) {
-            $sSlug = defined('APP_GEO_IP_DRIVER') ? strtolower(APP_GEO_IP_DRIVER) : self::DEFAULT_DRIVER;
+            $sSlug = defined('APP_GEO_IP_DRIVER') ? strtolower(APP_GEO_IP_DRIVER) : '';
         }
+
+        if (empty($sSlug)) {
+            throw new GeoIpDriverException('A Geo-IP driver must be defined ("APP_GEO_IP_DRIVER")');
+        }
+
         $aDrivers = _NAILS_GET_DRIVERS('nailsapp/module-geo-ip');
         $oDriver  = null;
 
@@ -68,18 +73,15 @@ class GeoIp
         }
 
         if (empty($oDriver)) {
-            throw new GeoIpDriverException('"' . $sSlug . '" is not a valid Geo-IP driver', 1);
+            throw new GeoIpDriverException('"' . $sSlug . '" is not a valid Geo-IP driver');
         }
 
         $sDriverClass = $oDriver->data->namespace . $oDriver->data->class;
 
         //  Ensure driver implements the correct interface
         $sInterfaceName = 'Nails\GeoIp\Interfaces\Driver';
-        if (!in_array($sInterfaceName, class_implements($sDriverClass))) {
-            throw new GeoIpDriverException(
-                '"' . $sDriverClass . '" must implement ' . $sInterfaceName,
-                2
-            );
+        if (!classImplements($sDriverClass, $sInterfaceName)) {
+            throw new GeoIpDriverException('"' . $sDriverClass . '" must implement "' . $sInterfaceName . '"');
         }
 
         return _NAILS_GET_DRIVER_INSTANCE($oDriver);
@@ -112,7 +114,7 @@ class GeoIp
         $oIp = $this->oDriver->lookup($sIp);
 
         if (!($oIp instanceof Ip)) {
-            throw new GeoIpException('Geo IP Driver did not return a \Nails\GeoIp\Result\Ip result', 3);
+            throw new GeoIpException('Geo IP Driver did not return a \Nails\GeoIp\Result\Ip result');
         }
 
         $this->setCache($sIp, $oIp);
