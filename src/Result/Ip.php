@@ -21,6 +21,7 @@ class Ip
     private $sCountry;
     private $sLat;
     private $sLng;
+    private $sError;
 
     // --------------------------------------------------------------------------
 
@@ -42,7 +43,8 @@ class Ip
         $sRegion = '',
         $sCountry = '',
         $sLat = '',
-        $sLng = ''
+        $sLng = '',
+        $sError = ''
     ) {
         $this->sIp       = $sIp;
         $this->sHostname = $sHostname;
@@ -51,6 +53,7 @@ class Ip
         $this->sCountry  = $sCountry;
         $this->sLat      = $sLat;
         $this->sLng      = $sLng;
+        $this->sError    = $sError;
     }
 
     // --------------------------------------------------------------------------
@@ -260,10 +263,33 @@ class Ip
      */
     public function getLatLng()
     {
-        $oLatLng      = new \stdClass();
-        $oLatLng->lat = $this->sLat;
-        $oLatLng->lng = $this->sLng;
+        return (object) [
+            'lat' => $this->sLat,
+            'ngt' => $this->sLng,
+        ];
+    }
 
-        return $oLatLng;
+    // --------------------------------------------------------------------------
+
+    /**
+     * Set the error message
+     *
+     * @param string $sError The error message to set
+     */
+    public function setError($sError)
+    {
+        $this->sError = $sError;
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Returns the error message
+     *
+     * @return string
+     */
+    public function getError()
+    {
+        return $this->sError;
     }
 }

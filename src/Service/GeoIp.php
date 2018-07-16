@@ -13,6 +13,7 @@
 namespace Nails\GeoIp\Service;
 
 use Nails\Common\Traits\Caching;
+use Nails\Factory;
 use Nails\GeoIp\Exception\GeoIpDriverException;
 use Nails\GeoIp\Exception\GeoIpException;
 use Nails\GeoIp\Result\Ip;
@@ -52,39 +53,33 @@ class GeoIp
      */
     public function getDriverInstance($sSlug = null)
     {
-        //  Load the driver
-        // @todo: build a settings interface for setting and configuring the driver.
-        if (empty($sSlug)) {
-            $sSlug = defined('APP_GEO_IP_DRIVER') ? strtolower(APP_GEO_IP_DRIVER) : '';
+        $oModel         = Factory::model('Driver', 'nailsapp/module-geo-ip');
+        $sEnabledDriver = appSetting($oModel->getSettingKey(), 'nailsapp/module-geo-ip');
+        $oEnabledDriver = $oModel->getEnabled();
+
+        if (empty($sEnabledDriver) && empty($oEnabledDriver)) {
+            //  No configured driver, default to first available driver and hope for the best
+            $aDrivers       = $oModel->getAll();
+            $oEnabledDriver = reset($aDrivers);
         }
 
-        if (empty($sSlug)) {
-            throw new GeoIpDriverException('A Geo-IP driver must be defined ("APP_GEO_IP_DRIVER")');
+        if (empty($sEnabledDriver) && empty($oEnabledDriver)) {
+            throw new GeoIpDriverException('No Geo-IP drivers are available.');
+        } elseif (empty($oEnabledDriver)) {
+            throw new GeoIpDriverException('Driver "' . $sEnabledDriver . '" is not installed');
         }
 
-        $aDrivers = _NAILS_GET_DRIVERS('nailsapp/module-geo-ip');
-        $oDriver  = null;
-
-        for ($i = 0; $i < count($aDrivers); $i++) {
-            if ($aDrivers[$i]->slug == $sSlug) {
-                $oDriver = $aDrivers[$i];
-                break;
-            }
-        }
-
-        if (empty($oDriver)) {
-            throw new GeoIpDriverException('"' . $sSlug . '" is not a valid Geo-IP driver');
-        }
-
-        $sDriverClass = $oDriver->data->namespace . $oDriver->data->class;
+        $oDriver = $oModel->getInstance($oEnabledDriver->slug);
 
         //  Ensure driver implements the correct interface
         $sInterfaceName = 'Nails\GeoIp\Interfaces\Driver';
-        if (!classImplements($sDriverClass, $sInterfaceName)) {
-            throw new GeoIpDriverException('"' . $sDriverClass . '" must implement "' . $sInterfaceName . '"');
+        if (!classImplements($oDriver, $sInterfaceName)) {
+            throw new GeoIpDriverException(
+                '"' . get_class($oDriver) . '" must implement "' . $sInterfaceName . '"'
+            );
         }
 
-        return _NAILS_GET_DRIVER_INSTANCE($oDriver);
+        return $oDriver;
     }
 
     // --------------------------------------------------------------------------
