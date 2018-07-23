@@ -265,7 +265,7 @@ class Ip
     {
         return (object) [
             'lat' => $this->sLat,
-            'ngt' => $this->sLng,
+            'lng' => $this->sLng,
         ];
     }
 
