@@ -1,5 +1,5 @@
 {
-    "name": "nailsapp/module-geo-ip",
+    "name": "nails/module-geo-ip",
     "keywords": ["Nails", "Shed Collective", "CodeIgniter", "GEO-IP Module"],
     "homepage": "http://nailsapp.co.uk/modules/geo-ip",
     "description": "This is the \"GeoIP\" module for Nails.",
@@ -27,7 +27,7 @@
     "prefer-stable": true,
     "require":
     {
-        "nailsapp/common": "dev-develop"
+        "nails/common": "dev-develop"
     },
     "require-dev":
     {

@@ -27,7 +27,7 @@ $sActiveTab = $oInput->post('active_tab') ?: 'tab-drivers';
                 <?=adminHelper(
                     'loadSettingsDriverTable',
                     'Driver',
-                    'nailsapp/module-geo-ip'
+                    'nails/module-geo-ip'
                 )?>
             </div>
             <?php

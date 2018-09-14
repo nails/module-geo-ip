@@ -25,7 +25,7 @@ class Settings extends Base
      */
     public static function announce()
     {
-        $oNavGroup = Factory::factory('Nav', 'nailsapp/module-admin');
+        $oNavGroup = Factory::factory('Nav', 'nails/module-admin');
         $oNavGroup->setLabel('Settings');
         $oNavGroup->setIcon('fa-wrench');
 
@@ -65,7 +65,7 @@ class Settings extends Base
         $oDb              = Factory::service('Database');
         $oInput           = Factory::service('Input');
         $oAppSettingModel = Factory::model('AppSetting');
-        $oDriverModel     = Factory::model('Driver', 'nailsapp/module-geo-ip');
+        $oDriverModel     = Factory::model('Driver', 'nails/module-geo-ip');
 
         //  Process POST
         if ($oInput->post()) {
@@ -97,7 +97,7 @@ class Settings extends Base
         // --------------------------------------------------------------------------
 
         //  Get data
-        $this->data['settings']        = appSetting(null, 'nailsapp/module-geo-ip', true);
+        $this->data['settings']        = appSetting(null, 'nails/module-geo-ip', true);
         $this->data['drivers']         = $oDriverModel->getAll();
         $this->data['drivers_enabled'] = $oDriverModel->getEnabledSlug();
 

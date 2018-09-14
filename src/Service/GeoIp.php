@@ -53,8 +53,8 @@ class GeoIp
      */
     public function getDriverInstance($sSlug = null)
     {
-        $oModel         = Factory::model('Driver', 'nailsapp/module-geo-ip');
-        $sEnabledDriver = appSetting($oModel->getSettingKey(), 'nailsapp/module-geo-ip');
+        $oModel         = Factory::model('Driver', 'nails/module-geo-ip');
+        $sEnabledDriver = appSetting($oModel->getSettingKey(), 'nails/module-geo-ip');
         $oEnabledDriver = $oModel->getEnabled();
 
         if (empty($sEnabledDriver) && empty($oEnabledDriver)) {

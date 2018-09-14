@@ -16,6 +16,6 @@ use Nails\Common\Model\BaseDriver;
 
 class Driver extends BaseDriver
 {
-    protected $sModule         = 'nailsapp/module-geo-ip';
+    protected $sModule         = 'nails/module-geo-ip';
     protected $bEnableMultiple = false;
 }
