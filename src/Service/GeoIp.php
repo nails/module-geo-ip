@@ -53,13 +53,13 @@ class GeoIp
      */
     public function getDriverInstance($sSlug = null)
     {
-        $oModel         = Factory::model('Driver', 'nails/module-geo-ip');
-        $sEnabledDriver = appSetting($oModel->getSettingKey(), 'nails/module-geo-ip');
-        $oEnabledDriver = $oModel->getEnabled();
+        $oDriverService = Factory::service('Driver', 'nails/module-geo-ip');
+        $sEnabledDriver = appSetting($oDriverService->getSettingKey(), 'nails/module-geo-ip');
+        $oEnabledDriver = $oDriverService->getEnabled();
 
         if (empty($sEnabledDriver) && empty($oEnabledDriver)) {
             //  No configured driver, default to first available driver and hope for the best
-            $aDrivers       = $oModel->getAll();
+            $aDrivers       = $oDriverService->getAll();
             $oEnabledDriver = reset($aDrivers);
         }
 
@@ -69,7 +69,7 @@ class GeoIp
             throw new GeoIpDriverException('Driver "' . $sEnabledDriver . '" is not installed');
         }
 
-        $oDriver = $oModel->getInstance($oEnabledDriver->slug);
+        $oDriver = $oDriverService->getInstance($oEnabledDriver->slug);
 
         //  Ensure driver implements the correct interface
         $sInterfaceName = 'Nails\GeoIp\Interfaces\Driver';

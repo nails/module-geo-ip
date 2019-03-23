@@ -62,10 +62,9 @@ class Settings extends Base
             unauthorised();
         }
 
-        $oDb              = Factory::service('Database');
-        $oInput           = Factory::service('Input');
-        $oAppSettingModel = Factory::model('AppSetting');
-        $oDriverModel     = Factory::model('Driver', 'nails/module-geo-ip');
+        $oDb            = Factory::service('Database');
+        $oInput         = Factory::service('Input');
+        $oDriverService = Factory::service('Driver', 'nails/module-geo-ip');
 
         //  Process POST
         if ($oInput->post()) {
@@ -74,7 +73,7 @@ class Settings extends Base
 
             try {
 
-                $sKeyDriver = $oDriverModel->getSettingKey();
+                $sKeyDriver = $oDriverService->getSettingKey();
 
                 $oFormValidation = Factory::service('FormValidation');
                 $oFormValidation->set_rules($sKeyDriver, '', 'required');
@@ -82,7 +81,7 @@ class Settings extends Base
                     throw new ValidationException(lang('fv_there_were_errors'));
                 }
 
-                $oDriverModel->saveEnabled($oInput->post($sKeyDriver));
+                $oDriverService->saveEnabled($oInput->post($sKeyDriver));
 
                 $oDb->trans_commit();
 
@@ -98,8 +97,8 @@ class Settings extends Base
 
         //  Get data
         $this->data['settings']        = appSetting(null, 'nails/module-geo-ip', true);
-        $this->data['drivers']         = $oDriverModel->getAll();
-        $this->data['drivers_enabled'] = $oDriverModel->getEnabledSlug();
+        $this->data['drivers']         = $oDriverService->getAll();
+        $this->data['drivers_enabled'] = $oDriverService->getEnabledSlug();
 
         Helper::loadView('index');
     }

@@ -1,16 +1,16 @@
 <?php
 
 /**
- * This model manages the Geo-IP drivers
+ * This service manages the Geo-IP drivers
  *
  * @package     Nails
  * @subpackage  module-geo-ip
- * @category    Model
+ * @category    Service
  * @author      Nails Dev Team
  * @link
  */
 
-namespace Nails\GeoIp\Model;
+namespace Nails\GeoIp\Service;
 
 use Nails\Common\Model\BaseDriver;
 
