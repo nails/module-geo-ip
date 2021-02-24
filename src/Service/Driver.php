@@ -13,9 +13,10 @@
 namespace Nails\GeoIp\Service;
 
 use Nails\Common\Model\BaseDriver;
+use Nails\GeoIp\Constants;
 
 class Driver extends BaseDriver
 {
-    protected $sModule         = 'nails/module-geo-ip';
+    protected $sModule         = Constants::MODULE_SLUG;
     protected $bEnableMultiple = false;
 }

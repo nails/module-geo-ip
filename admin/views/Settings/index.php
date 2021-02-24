@@ -1,5 +1,7 @@
 <?php
 
+use Nails\GeoIp\Constants;
+
 //  Get any additional libraries we'll need
 $oInput     = \Nails\Factory::service('Input');
 $sActiveTab = $oInput->post('active_tab') ?: 'tab-drivers';
@@ -27,7 +29,7 @@ $sActiveTab = $oInput->post('active_tab') ?: 'tab-drivers';
                 <?=adminHelper(
                     'loadSettingsDriverTable',
                     'Driver',
-                    'nails/module-geo-ip'
+                    Constants::MODULE_SLUG
                 )?>
             </div>
             <?php

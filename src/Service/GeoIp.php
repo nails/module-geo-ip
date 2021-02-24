@@ -14,6 +14,7 @@ namespace Nails\GeoIp\Service;
 
 use Nails\Common\Traits\Caching;
 use Nails\Factory;
+use Nails\GeoIp\Constants;
 use Nails\GeoIp\Exception\GeoIpDriverException;
 use Nails\GeoIp\Exception\GeoIpException;
 use Nails\GeoIp\Result\Ip;
@@ -53,8 +54,8 @@ class GeoIp
      */
     public function getDriverInstance($sSlug = null)
     {
-        $oDriverService = Factory::service('Driver', 'nails/module-geo-ip');
-        $sEnabledDriver = appSetting($oDriverService->getSettingKey(), 'nails/module-geo-ip');
+        $oDriverService = Factory::service('Driver', Constants::MODULE_SLUG);
+        $sEnabledDriver = appSetting($oDriverService->getSettingKey(), Constants::MODULE_SLUG);
         $oEnabledDriver = $oDriverService->getEnabled();
 
         if (empty($sEnabledDriver) && empty($oEnabledDriver)) {

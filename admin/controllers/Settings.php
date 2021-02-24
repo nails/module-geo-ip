@@ -16,6 +16,7 @@ use Nails\Admin\Controller\Base;
 use Nails\Admin\Helper;
 use Nails\Common\Exception\ValidationException;
 use Nails\Factory;
+use Nails\GeoIp\Constants;
 
 class Settings extends Base
 {
@@ -64,7 +65,7 @@ class Settings extends Base
 
         $oDb            = Factory::service('Database');
         $oInput         = Factory::service('Input');
-        $oDriverService = Factory::service('Driver', 'nails/module-geo-ip');
+        $oDriverService = Factory::service('Driver', Constants::MODULE_SLUG);
 
         //  Process POST
         if ($oInput->post()) {
@@ -96,7 +97,7 @@ class Settings extends Base
         // --------------------------------------------------------------------------
 
         //  Get data
-        $this->data['settings']        = appSetting(null, 'nails/module-geo-ip', null, true);
+        $this->data['settings']        = appSetting(null, Constants::MODULE_SLUG, null, true);
         $this->data['drivers']         = $oDriverService->getAll();
         $this->data['drivers_enabled'] = $oDriverService->getEnabledSlug();
 
