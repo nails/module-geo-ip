@@ -70,7 +70,7 @@ class Settings extends Base
         //  Process POST
         if ($oInput->post()) {
 
-            $oDb->trans_begin();
+            $oDb->transaction()->start();
 
             try {
 
@@ -84,12 +84,12 @@ class Settings extends Base
 
                 $oDriverService->saveEnabled($oInput->post($sKeyDriver));
 
-                $oDb->trans_commit();
+                $oDb->transaction()->commit();
 
                 $this->data['success'] = 'Geo-IP settings were saved.';
 
             } catch (\Exception $e) {
-                $oDb->trans_rollback();
+                $oDb->transaction()->rollback();
                 $this->data['error'] = 'There was a problem saving settings. ' . $e->getMessage();
             }
         }
