@@ -41,6 +41,10 @@
     {
         "psr-4": {"Nails\\GeoIp\\": "src/"}
     },
+    "suggest": {
+        "nails/driver-geoip-ipinfo": "Adds support for looking up IP details using ipinfo.io.",
+        "nails/driver-geoip-ipstack": "Adds support for looking up IP details using IPStack"
+    },
     "extra":
     {
         "nails" :
