@@ -3,25 +3,44 @@
 /**
  * This class is an IP object which should be returned by IP Drivers
  *
- * @package     Nails
- * @subpackage  module-geo-ip
- * @category    Result
- * @author      Nails Dev Team
- * @link
+ * @package    Nails
+ * @subpackage module-geo-ip
+ * @category   Result
+ * @author     Nails Dev Team
  */
 
 namespace Nails\GeoIp\Result;
 
+/**
+ * Class Ip
+ *
+ * @package Nails\GeoIp\Result
+ */
 class Ip
 {
-    private $sIp;
-    private $sHostname;
-    private $sCity;
-    private $sRegion;
-    private $sCountry;
-    private $sLat;
-    private $sLng;
-    private $sError;
+    /** @var string */
+    protected $sIp;
+
+    /** @var string */
+    protected $sHostname;
+
+    /** @var string */
+    protected $sCity;
+
+    /** @var string */
+    protected $sRegion;
+
+    /** @var string */
+    protected $sCountry;
+
+    /** @var string */
+    protected $sLat;
+
+    /** @var string */
+    protected $sLng;
+
+    /** @var string */
+    protected $sError;
 
     // --------------------------------------------------------------------------
 
@@ -37,14 +56,14 @@ class Ip
      * @param string $sLng
      */
     public function __construct(
-        $sIp = '',
-        $sHostname = '',
-        $sCity = '',
-        $sRegion = '',
-        $sCountry = '',
-        $sLat = '',
-        $sLng = '',
-        $sError = ''
+        string $sIp = '',
+        string $sHostname = '',
+        string $sCity = '',
+        string $sRegion = '',
+        string $sCountry = '',
+        string $sLat = '',
+        string $sLng = '',
+        string $sError = ''
     ) {
         $this->sIp       = $sIp;
         $this->sHostname = $sHostname;
@@ -65,7 +84,7 @@ class Ip
      *
      * @return $this
      */
-    public function setIp($sIp)
+    public function setIp(string $sIp): self
     {
         $this->sIp = $sIp;
         return $this;
@@ -75,9 +94,10 @@ class Ip
 
     /**
      * Get the IP address
+     *
      * @return string
      */
-    public function getIp()
+    public function getIp(): string
     {
         return $this->sIp;
     }
@@ -91,7 +111,7 @@ class Ip
      *
      * @return $this
      */
-    public function setHostname($sHostname)
+    public function setHostname(string $sHostname): self
     {
         $this->sHostname = $sHostname;
         return $this;
@@ -101,9 +121,10 @@ class Ip
 
     /**
      * Get the hostname
+     *
      * @return string
      */
-    public function getHostname()
+    public function getHostname(): string
     {
         return $this->sHostname;
     }
@@ -117,7 +138,7 @@ class Ip
      *
      * @return $this
      */
-    public function setCity($sCity)
+    public function setCity(string $sCity): self
     {
         $this->sCity = $sCity;
         return $this;
@@ -127,9 +148,10 @@ class Ip
 
     /**
      * Get the city
+     *
      * @return string
      */
-    public function getCity()
+    public function getCity():string
     {
         return $this->sCity;
     }
@@ -143,7 +165,7 @@ class Ip
      *
      * @return $this
      */
-    public function setRegion($sRegion)
+    public function setRegion(string $sRegion): self
     {
         $this->sRegion = $sRegion;
         return $this;
@@ -153,9 +175,10 @@ class Ip
 
     /**
      * Get the region
+     *
      * @return string
      */
-    public function getRegion()
+    public function getRegion(): string
     {
         return $this->sRegion;
     }
@@ -169,7 +192,7 @@ class Ip
      *
      * @return $this
      */
-    public function setCountry($sCountry)
+    public function setCountry(string $sCountry): self
     {
         $this->sCountry = $sCountry;
         return $this;
@@ -179,9 +202,10 @@ class Ip
 
     /**
      * Get the country
+     *
      * @return string
      */
-    public function getCountry()
+    public function getCountry(): string
     {
         return $this->sCountry;
     }
@@ -196,7 +220,7 @@ class Ip
      *
      * @return $this
      */
-    public function setLatLng($sLat, $sLng)
+    public function setLatLng(string $sLat, string $sLng): self
     {
         $this->setLat($sLat);
         $this->setLng($sLng);
@@ -212,7 +236,7 @@ class Ip
      *
      * @return $this
      */
-    public function setLat($sLat)
+    public function setLat(string $sLat): self
     {
         $this->sLat = $sLat;
         return $this;
@@ -222,9 +246,10 @@ class Ip
 
     /**
      * Get the latitude
+     *
      * @return string
      */
-    public function getLat()
+    public function getLat(): string
     {
         return $this->sLat;
     }
@@ -238,7 +263,7 @@ class Ip
      *
      * @return $this
      */
-    public function setLng($sLng)
+    public function setLng(string $sLng): self
     {
         $this->sLng = $sLng;
         return $this;
@@ -248,9 +273,10 @@ class Ip
 
     /**
      * Get the longitude
+     *
      * @return string
      */
-    public function getLng()
+    public function getLng(): string
     {
         return $this->sLng;
     }
@@ -259,9 +285,10 @@ class Ip
 
     /**
      * Get the IP's coordinates
+     *
      * @return \stdClass
      */
-    public function getLatLng()
+    public function getLatLng(): \stdClass
     {
         return (object) [
             'lat' => $this->sLat,
@@ -276,9 +303,10 @@ class Ip
      *
      * @param string $sError The error message to set
      */
-    public function setError($sError)
+    public function setError(string $sError): self
     {
         $this->sError = $sError;
+        return $this;
     }
 
     // --------------------------------------------------------------------------
@@ -288,7 +316,7 @@ class Ip
      *
      * @return string
      */
-    public function getError()
+    public function getError(): string
     {
         return $this->sError;
     }

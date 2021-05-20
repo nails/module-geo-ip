@@ -3,11 +3,10 @@
 /**
  * This class abstracts access to the GeoIP service
  *
- * @package     Nails
- * @subpackage  module-geo-ip
- * @category    Library
- * @author      Nails Dev Team
- * @link
+ * @package    Nails
+ * @subpackage module-geo-ip
+ * @category   Service
+ * @author     Nails Dev Team
  */
 
 namespace Nails\GeoIp\Service;
@@ -18,23 +17,28 @@ use Nails\GeoIp\Constants;
 use Nails\GeoIp\Exception\GeoIpDriverException;
 use Nails\GeoIp\Exception\GeoIpException;
 use Nails\GeoIp\Result\Ip;
+use Nails\GeoIp\Interfaces;
+use Nails\GeoIp\Result;
 
+/**
+ * Class GeoIp
+ *
+ * @package Nails\GeoIp\Service
+ */
 class GeoIp
 {
     use Caching;
 
     // --------------------------------------------------------------------------
 
-    /**
-     * The Driver instance
-     * @var Nails\GeoIp\Interfaces\Driver
-     */
+    /** @var Interfaces\Driver */
     protected $oDriver;
 
     // --------------------------------------------------------------------------
 
     /**
      * Construct the Service, test that the driver is valid
+     *
      * @throws GeoIpDriverException
      */
     public function __construct()
@@ -47,37 +51,41 @@ class GeoIp
     /**
      * Returns an instance of the driver
      *
-     * @param  string $sSlug The driver's slug
+     * @param string|null $sSlug The driver's slug
      *
      * @throws GeoIpDriverException
-     * @return \Nails\GeoIp\Interfaces\Driver
+     * @return Interfaces\Driver
      */
-    public function getDriverInstance($sSlug = null)
+    public function getDriverInstance(string $sSlug = null): Interfaces\Driver
     {
+        /** @var \Nails\GeoIp\Service\Driver $oDriverService */
         $oDriverService = Factory::service('Driver', Constants::MODULE_SLUG);
         $sEnabledDriver = appSetting($oDriverService->getSettingKey(), Constants::MODULE_SLUG);
+        /** @var \Nails\Common\Factory\Component $oEnabledDriver */
         $oEnabledDriver = $oDriverService->getEnabled();
 
         if (empty($sEnabledDriver) && empty($oEnabledDriver)) {
             //  No configured driver, default to first available driver and hope for the best
-            $aDrivers       = $oDriverService->getAll();
+            $aDrivers = $oDriverService->getAll();
+            /** @var \Nails\Common\Factory\Component $oEnabledDriver */
             $oEnabledDriver = reset($aDrivers);
         }
 
         if (empty($sEnabledDriver) && empty($oEnabledDriver)) {
             throw new GeoIpDriverException('No Geo-IP drivers are available.');
+
         } elseif (empty($oEnabledDriver)) {
             throw new GeoIpDriverException('Driver "' . $sEnabledDriver . '" is not installed');
         }
 
         $oDriver = $oDriverService->getInstance($oEnabledDriver->slug);
 
-        //  Ensure driver implements the correct interface
-        $sInterfaceName = 'Nails\GeoIp\Interfaces\Driver';
-        if (!classImplements($oDriver, $sInterfaceName)) {
-            throw new GeoIpDriverException(
-                '"' . get_class($oDriver) . '" must implement "' . $sInterfaceName . '"'
-            );
+        if (!classImplements($oDriver, Interfaces\Driver::class)) {
+            throw new GeoIpDriverException(sprintf(
+                '"%s" must implement "%s"',
+                get_class($oDriver),
+                Interfaces\Driver::class
+            ));
         }
 
         return $oDriver;
@@ -90,10 +98,10 @@ class GeoIp
      *
      * @param string $sIp The IP to get details for
      *
+     * @return Result\Ip
      * @throws GeoIpException
-     * @return \Nails\GeoIp\Result\Ip
      */
-    public function lookup($sIp = '')
+    public function lookup(string $sIp = ''): Result\Ip
     {
         $sIp = trim($sIp);
 
@@ -110,7 +118,10 @@ class GeoIp
         $oIp = $this->oDriver->lookup($sIp);
 
         if (!($oIp instanceof Ip)) {
-            throw new GeoIpException('Geo IP Driver did not return a \Nails\GeoIp\Result\Ip result');
+            throw new GeoIpException(sprintf(
+                'Geo IP Driver did not return a %s result',
+                Result\Ip::class
+            ));
         }
 
         $this->setCache($sIp, $oIp);
@@ -125,9 +136,9 @@ class GeoIp
      *
      * @param string $sIp The IP to look up
      *
-     * @return string|null
+     * @return string
      */
-    public function ip($sIp)
+    public function ip(string $sIp): string
     {
         return $this->lookup($sIp)->getIp();
     }
@@ -139,9 +150,9 @@ class GeoIp
      *
      * @param string $sIp The IP to look up
      *
-     * @return string|null
+     * @return string
      */
-    public function hostname($sIp = '')
+    public function hostname(string $sIp = ''): string
     {
         return $this->lookup($sIp)->getHostname();
     }
@@ -153,9 +164,9 @@ class GeoIp
      *
      * @param string $sIp The IP to look up
      *
-     * @return string|null
+     * @return string
      */
-    public function city($sIp = '')
+    public function city(string $sIp = ''): string
     {
         return $this->lookup($sIp)->getCity();
     }
@@ -167,9 +178,9 @@ class GeoIp
      *
      * @param string $sIp The IP to look up
      *
-     * @return string|null
+     * @return string
      */
-    public function region($sIp = '')
+    public function region(string $sIp = ''): string
     {
         return $this->lookup($sIp)->getRegion();
     }
@@ -181,9 +192,9 @@ class GeoIp
      *
      * @param string $sIp The IP to look up
      *
-     * @return string|null
+     * @return string
      */
-    public function country($sIp = '')
+    public function country(string $sIp = ''): string
     {
         return $this->lookup($sIp)->getCountry();
     }
@@ -195,9 +206,9 @@ class GeoIp
      *
      * @param string $sIp The IP to look up
      *
-     * @return string|null
+     * @return \stdClass
      */
-    public function latLng($sIp = '')
+    public function latLng(string $sIp = ''): \stdClass
     {
         return $this->lookup($sIp)->getLatLng();
     }
@@ -209,9 +220,9 @@ class GeoIp
      *
      * @param string $sIp The IP to look up
      *
-     * @return string|null
+     * @return string
      */
-    public function lat($sIp = '')
+    public function lat(string $sIp = ''): string
     {
         return $this->lookup($sIp)->getLat();
     }
@@ -223,9 +234,9 @@ class GeoIp
      *
      * @param string $sIp The IP to look up
      *
-     * @return string|null
+     * @return string
      */
-    public function lng($sIp = '')
+    public function lng(string $sIp = ''): string
     {
         return $this->lookup($sIp)->getLng();
     }

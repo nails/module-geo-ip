@@ -2,6 +2,8 @@
 
 namespace Nails\GeoIp\Interfaces;
 
+use Nails\GeoIp\Result;
+
 interface Driver
 {
     /**
@@ -9,7 +11,7 @@ interface Driver
      *
      * @param string $sIp The IP address to look up
      *
-     * @return \stdClass
+     * @return Result\Ip
      */
-    public function lookup($sIp);
+    public function lookup(string $sIp): Result\Ip;
 }
