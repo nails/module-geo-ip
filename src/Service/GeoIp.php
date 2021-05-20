@@ -37,6 +37,18 @@ class GeoIp
     // --------------------------------------------------------------------------
 
     /**
+     * The name of the table to store cached results
+     */
+    const DB_CACHE_TABLE = NAILS_DB_PREFIX . 'geoip_cache';
+
+    /**
+     * How long a cached item is valid for, MySQL DATE_SUB interval
+     */
+    const CACHE_PERIOD = '1 HOUR';
+
+    // --------------------------------------------------------------------------
+
+    /**
      * Construct the Service, test that the driver is valid
      *
      * @throws GeoIpDriverException
@@ -115,13 +127,48 @@ class GeoIp
             return $oCache;
         }
 
-        $oIp = $this->oDriver->lookup($sIp);
+        /** @var \Nails\Common\Service\Database $oDb */
+        $oDb = Factory::service('Database');
+        $oDb->where('ip', $sIp);
+        $oDb->where('created >', 'DATE_SUB(NOW(), INTERVAL ' . static::CACHE_PERIOD . ')');
+        $oDb->limit(1);
+        $oResult = $oDb->get(self::DB_CACHE_TABLE)->row();
 
-        if (!($oIp instanceof Ip)) {
-            throw new GeoIpException(sprintf(
-                'Geo IP Driver did not return a %s result',
-                Result\Ip::class
-            ));
+        if (!empty($oResult)) {
+
+            /** @var Ip $oIp */
+            $oIp = Factory::factory('Ip', Constants::MODULE_SLUG);
+            $oIp
+                ->setIp($sIp)
+                ->setHostname($oResult->hostname)
+                ->setCity($oResult->city)
+                ->setRegion($oResult->region)
+                ->setCountry($oResult->country)
+                ->setLat($oResult->lat)
+                ->setLng($oResult->lng);
+
+        } else {
+
+            $oIp = $this->oDriver->lookup($sIp);
+
+            if (!($oIp instanceof Ip)) {
+                throw new GeoIpException(sprintf(
+                    'Geo IP Driver did not return a %s result',
+                    Result\Ip::class
+                ));
+            }
+
+            //  Save to the DB Cache
+            if (!empty($sLat) && !empty($sLng)) {
+                $oDb->set('hostname', $oIp->getHostname());
+                $oDb->set('city', $oIp->getCity());
+                $oDb->set('region', $oIp->getRegion());
+                $oDb->set('country', $oIp->getCountry());
+                $oDb->set('lat', $oIp->getLat());
+                $oDb->set('lng', $oIp->getLng());
+                $oDb->set('created', 'NOW()', false);
+                $oDb->insert(self::DB_CACHE_TABLE);
+            }
         }
 
         $this->setCache($sIp, $oIp);
