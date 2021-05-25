@@ -29,6 +29,7 @@ class Migration0 extends Base
         $this->query("
             CREATE TABLE `{{NAILS_DB_PREFIX}}geoip_cache` (
                 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `ip` varchar(255) NOT NULL DEFAULT '',
                 `hostname` varchar(255) NOT NULL DEFAULT '',
                 `city` varchar(255) NOT NULL DEFAULT '',
                 `region` varchar(255) NOT NULL DEFAULT '',
