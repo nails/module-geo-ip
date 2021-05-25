@@ -108,12 +108,12 @@ class GeoIp
     /**
      * Return all information about a given IP
      *
-     * @param string $sIp The IP to get details for
+     * @param string|null $sIp The IP to get details for
      *
      * @return Result\Ip
      * @throws GeoIpException
      */
-    public function lookup(string $sIp = ''): Result\Ip
+    public function lookup(string $sIp = null): Result\Ip
     {
         $sIp = trim($sIp);
 
