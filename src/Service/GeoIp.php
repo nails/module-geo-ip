@@ -130,7 +130,7 @@ class GeoIp
         /** @var \Nails\Common\Service\Database $oDb */
         $oDb = Factory::service('Database');
         $oDb->where('ip', $sIp);
-        $oDb->where('created >', 'DATE_SUB(NOW(), INTERVAL ' . static::CACHE_PERIOD . ')');
+        $oDb->where('created >', 'DATE_SUB(NOW(), INTERVAL ' . static::CACHE_PERIOD . ')', false);
         $oDb->limit(1);
         $oResult = $oDb->get(self::DB_CACHE_TABLE)->row();
 
