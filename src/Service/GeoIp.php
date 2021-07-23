@@ -34,6 +34,9 @@ class GeoIp
     /** @var Interfaces\Driver */
     protected $oDriver;
 
+    /** @var \Nails\Common\Service\Country */
+    protected $oCountryService;
+
     // --------------------------------------------------------------------------
 
     /**
@@ -55,7 +58,8 @@ class GeoIp
      */
     public function __construct()
     {
-        $this->oDriver = $this->getDriverInstance();
+        $this->oDriver         = $this->getDriverInstance();
+        $this->oCountryService = Factory::service('Country');
     }
 
     // --------------------------------------------------------------------------
@@ -161,6 +165,7 @@ class GeoIp
                 ));
             }
 
+            $this->populateBlanks($oIp);
 
             if (empty($oIp->getError())) {
 
@@ -183,6 +188,70 @@ class GeoIp
         $this->setCache($sIp, $oIp);
 
         return $oIp;
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * If there's data missing populate what we can given we know the country code
+     *
+     * @param \Nails\GeoIp\Result\Ip $oIp
+     */
+    protected function populateBlanks(Ip $oIp)
+    {
+        if (!$oIp->getCountry() && $oIp->getCountryCode()) {
+            $this->populateCountryFromCountryCode($oIp);
+        }
+
+        if (!$oIp->getContinentCode() && $oIp->getCountryCode()) {
+            $this->populateContinentCodeFromCountryCode($oIp);
+        }
+
+        if (!$oIp->getContinent() && $oIp->getContinentCode()) {
+            $this->populateContinentFromCountryCode($oIp);
+        }
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Given a known country code, set the country name
+     *
+     * @param \Nails\GeoIp\Result\Ip $oIp
+     */
+    protected function populateCountryFromCountryCode(Ip $oIp)
+    {
+        $oCountry = $this->oCountryService->getCountry($oIp->getCountryCode());
+
+        $oIp->setCountry($oCountry->name ?? '');
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Given a known country code, set the continent code
+     *
+     * @param \Nails\GeoIp\Result\Ip $oIp
+     */
+    protected function populateContinentCodeFromCountryCode(Ip $oIp)
+    {
+        $oCountry = $this->oCountryService->getCountry($oIp->getCountryCode());
+
+        $oIp->setContinentCode($oCountry->continent->iso ?? '');
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Given a known continen codet, set the continent name
+     *
+     * @param \Nails\GeoIp\Result\Ip $oIp
+     */
+    protected function populateContinentFromCountryCode(Ip $oIp)
+    {
+        $oContinent = $this->oCountryService->getContinent($oIp->getContinentCode());
+
+        $oIp->setContinent($oContinent->name ?? '');
     }
 
     // --------------------------------------------------------------------------
