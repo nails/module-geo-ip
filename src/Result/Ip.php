@@ -34,6 +34,15 @@ class Ip
     protected $sCountry;
 
     /** @var string */
+    protected $sCountryCode;
+
+    /** @var string */
+    protected $sContinent;
+
+    /** @var string */
+    protected $sContinentCode;
+
+    /** @var string */
     protected $sLat;
 
     /** @var string */
@@ -52,6 +61,9 @@ class Ip
      * @param string $sCity
      * @param string $sRegion
      * @param string $sCountry
+     * @param string $sCountryCode
+     * @param string $sContinent
+     * @param string $sContinentCode
      * @param string $sLat
      * @param string $sLng
      */
@@ -61,18 +73,24 @@ class Ip
         string $sCity = '',
         string $sRegion = '',
         string $sCountry = '',
+        string $sCountryCode = '',
+        string $sContinent = '',
+        string $sContinentCode = '',
         string $sLat = '',
         string $sLng = '',
         string $sError = ''
     ) {
-        $this->sIp       = $sIp;
-        $this->sHostname = $sHostname;
-        $this->sCity     = $sCity;
-        $this->sRegion   = $sRegion;
-        $this->sCountry  = $sCountry;
-        $this->sLat      = $sLat;
-        $this->sLng      = $sLng;
-        $this->sError    = $sError;
+        $this->sIp            = $sIp;
+        $this->sHostname      = $sHostname;
+        $this->sCity          = $sCity;
+        $this->sRegion        = $sRegion;
+        $this->sCountry       = $sCountry;
+        $this->sCountryCode   = $sCountryCode;
+        $this->sContinent     = $sContinent;
+        $this->sContinentCode = $sContinentCode;
+        $this->sLat           = $sLat;
+        $this->sLng           = $sLng;
+        $this->sError         = $sError;
     }
 
     // --------------------------------------------------------------------------
@@ -151,7 +169,7 @@ class Ip
      *
      * @return string
      */
-    public function getCity():string
+    public function getCity(): string
     {
         return $this->sCity;
     }
@@ -213,6 +231,87 @@ class Ip
     // --------------------------------------------------------------------------
 
     /**
+     * Set the Country Code property
+     *
+     * @param string $sCountryCode The Country Code to set
+     *
+     * @return $this
+     */
+    public function setCountryCode(string $sCountryCode): self
+    {
+        $this->sCountryCode = $sCountryCode;
+        return $this;
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Get the country code
+     *
+     * @return string
+     */
+    public function getCountryCode(): string
+    {
+        return $this->sCountryCode;
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Set the Continent property
+     *
+     * @param string $sContinent The Continent to set
+     *
+     * @return $this
+     */
+    public function setContinent(string $sContinent): self
+    {
+        $this->sContinent = $sContinent;
+        return $this;
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Get the continent
+     *
+     * @return string
+     */
+    public function getContinent(): string
+    {
+        return $this->sContinent;
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Set the Continent Code property
+     *
+     * @param string $sContinentCode The Continen tCode to set
+     *
+     * @return $this
+     */
+    public function setContinentCode(string $sContinentCode): self
+    {
+        $this->sContinentCode = $sContinentCode;
+        return $this;
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Get the continent code
+     *
+     * @return string
+     */
+    public function getContinentCode(): string
+    {
+        return $this->sContinentCode;
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
      * Set the IP's Latitude and Longitude
      *
      * @param string $sLat The IP's Latitude
@@ -222,9 +321,9 @@ class Ip
      */
     public function setLatLng(string $sLat, string $sLng): self
     {
-        $this->setLat($sLat);
-        $this->setLng($sLng);
-        return $this;
+        return $this
+            ->setLat($sLat)
+            ->setLng($sLng);
     }
 
     // --------------------------------------------------------------------------

@@ -144,6 +144,9 @@ class GeoIp
                 ->setCity($oResult->city)
                 ->setRegion($oResult->region)
                 ->setCountry($oResult->country)
+                ->setCountryCode($oResult->country_code)
+                ->setContinent($oResult->continent)
+                ->setContinentCode($oResult->continent_code)
                 ->setLat($oResult->lat)
                 ->setLng($oResult->lng);
 
@@ -158,12 +161,18 @@ class GeoIp
                 ));
             }
 
-            //  Save to the DB Cache
-            if (!empty($sLat) && !empty($sLng)) {
+
+            if (empty($oIp->getError())) {
+
+                //  Save to the DB Cache
+                $oDb->set('ip', $oIp->getIp());
                 $oDb->set('hostname', $oIp->getHostname());
                 $oDb->set('city', $oIp->getCity());
                 $oDb->set('region', $oIp->getRegion());
                 $oDb->set('country', $oIp->getCountry());
+                $oDb->set('country_code', $oIp->getCountryCode());
+                $oDb->set('continent', $oIp->getContinent());
+                $oDb->set('continent_code', $oIp->getContinentCode());
                 $oDb->set('lat', $oIp->getLat());
                 $oDb->set('lng', $oIp->getLng());
                 $oDb->set('created', 'NOW()', false);
@@ -244,6 +253,48 @@ class GeoIp
     public function country(string $sIp = ''): string
     {
         return $this->lookup($sIp)->getCountry();
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Return the country code property of a lookup
+     *
+     * @param string $sIp The IP to look up
+     *
+     * @return string
+     */
+    public function countryCode(string $sIp = ''): string
+    {
+        return $this->lookup($sIp)->getCountryCode();
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Return the continent property of a lookup
+     *
+     * @param string $sIp The IP to look up
+     *
+     * @return string
+     */
+    public function continent(string $sIp = ''): string
+    {
+        return $this->lookup($sIp)->getContinent();
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * Return the continent code property of a lookup
+     *
+     * @param string $sIp The IP to look up
+     *
+     * @return string
+     */
+    public function continentCode(string $sIp = ''): string
+    {
+        return $this->lookup($sIp)->getContinentCode();
     }
 
     // --------------------------------------------------------------------------
