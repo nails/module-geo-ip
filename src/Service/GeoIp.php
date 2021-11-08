@@ -58,8 +58,11 @@ class GeoIp
      */
     public function __construct()
     {
-        $this->oDriver         = $this->getDriverInstance();
-        $this->oCountryService = Factory::service('Country');
+        $this->oDriver = $this->getDriverInstance();
+
+        /** @var \Nails\Common\Service\Country $oCountryService */
+        $oCountryService       = Factory::service('Country');
+        $this->oCountryService = $oCountryService;
     }
 
     // --------------------------------------------------------------------------
@@ -77,7 +80,7 @@ class GeoIp
         /** @var \Nails\GeoIp\Service\Driver $oDriverService */
         $oDriverService = Factory::service('Driver', Constants::MODULE_SLUG);
         $sEnabledDriver = appSetting($oDriverService->getSettingKey(), Constants::MODULE_SLUG);
-        /** @var \Nails\Common\Factory\Component $oEnabledDriver */
+        /** @var \Nails\Common\Factory\Component|null $oEnabledDriver */
         $oEnabledDriver = $oDriverService->getEnabled();
 
         if (empty($sEnabledDriver) && empty($oEnabledDriver)) {
@@ -119,7 +122,7 @@ class GeoIp
      */
     public function lookup(string $sIp = null): Result\Ip
     {
-        $sIp = trim($sIp);
+        $sIp = trim((string) $sIp);
 
         if (empty($sIp) && !empty($_SERVER['REMOTE_ADDR'])) {
             $sIp = $_SERVER['REMOTE_ADDR'];
@@ -197,7 +200,7 @@ class GeoIp
      *
      * @param \Nails\GeoIp\Result\Ip $oIp
      */
-    protected function populateBlanks(Ip $oIp)
+    protected function populateBlanks(Ip $oIp): void
     {
         if (!$oIp->getCountry() && $oIp->getCountryCode()) {
             $this->populateCountryFromCountryCode($oIp);
@@ -219,7 +222,7 @@ class GeoIp
      *
      * @param \Nails\GeoIp\Result\Ip $oIp
      */
-    protected function populateCountryFromCountryCode(Ip $oIp)
+    protected function populateCountryFromCountryCode(Ip $oIp): void
     {
         $oCountry = $this->oCountryService->getCountry($oIp->getCountryCode());
 
@@ -233,7 +236,7 @@ class GeoIp
      *
      * @param \Nails\GeoIp\Result\Ip $oIp
      */
-    protected function populateContinentCodeFromCountryCode(Ip $oIp)
+    protected function populateContinentCodeFromCountryCode(Ip $oIp): void
     {
         $oCountry = $this->oCountryService->getCountry($oIp->getCountryCode());
 
@@ -247,7 +250,7 @@ class GeoIp
      *
      * @param \Nails\GeoIp\Result\Ip $oIp
      */
-    protected function populateContinentFromCountryCode(Ip $oIp)
+    protected function populateContinentFromCountryCode(Ip $oIp): void
     {
         $oContinent = $this->oCountryService->getContinent($oIp->getContinentCode());
 

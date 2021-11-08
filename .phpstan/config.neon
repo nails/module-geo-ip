@@ -8,3 +8,4 @@ parameters:
     scanFiles:
         - ../vendor/nails/common/helpers/app_setting.php
         - ../vendor/nails/common/helpers/tools.php
+        - ../vendor/codeigniter/framework/system/database/DB_result.php
