@@ -75,7 +75,7 @@ class GeoIp
      * @throws GeoIpDriverException
      * @return Interfaces\Driver
      */
-    public function getDriverInstance(string $sSlug = null): Interfaces\Driver
+    public function getDriverInstance(?string $sSlug = null): Interfaces\Driver
     {
         /** @var \Nails\GeoIp\Service\Driver $oDriverService */
         $oDriverService = Factory::service('Driver', Constants::MODULE_SLUG);
@@ -120,7 +120,7 @@ class GeoIp
      * @return Result\Ip
      * @throws GeoIpException
      */
-    public function lookup(string $sIp = null): Result\Ip
+    public function lookup(?string $sIp = null): Result\Ip
     {
         $sIp = trim((string) $sIp);
 
