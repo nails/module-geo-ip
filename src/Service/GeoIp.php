@@ -16,7 +16,6 @@ use Nails\Config;
 use Nails\Factory;
 use Nails\GeoIp\Constants;
 use Nails\GeoIp\Exception\GeoIpDriverException;
-use Nails\GeoIp\Exception\GeoIpException;
 use Nails\GeoIp\Result\Ip;
 use Nails\GeoIp\Interfaces;
 use Nails\GeoIp\Result;
@@ -131,7 +130,6 @@ class GeoIp
      * @param string|null $sIp The IP to get details for
      *
      * @return Result\Ip
-     * @throws GeoIpException
      */
     public function lookup(?string $sIp = null): Result\Ip
     {
@@ -173,13 +171,6 @@ class GeoIp
         } else {
 
             $oIp = $this->oDriver->lookup($sIp);
-
-            if (!($oIp instanceof Ip)) {
-                throw new GeoIpException(sprintf(
-                    'Geo IP Driver did not return a %s result',
-                    Result\Ip::class
-                ));
-            }
 
             $this->populateBlanks($oIp);
 
