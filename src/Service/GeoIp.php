@@ -45,9 +45,9 @@ class GeoIp
     const DB_CACHE_TABLE = NAILS_DB_PREFIX . 'geoip_cache';
 
     /**
-     * How long a cached item is valid for, in seconds
+     * Default cache period in seconds when GEO_IP_CACHE_PERIOD is unset
      */
-    const CACHE_PERIOD_SECONDS = 3600;
+    const DEFAULT_CACHE_PERIOD_SECONDS = 3600;
 
     /**
      * Config key for the cache period, in seconds
@@ -204,11 +204,11 @@ class GeoIp
      */
     public static function cachePeriodSeconds(): int
     {
-        $iSeconds = (int) Config::get(static::CONFIG_CACHE_PERIOD, static::CACHE_PERIOD_SECONDS);
+        $iSeconds = (int) Config::get(static::CONFIG_CACHE_PERIOD, static::DEFAULT_CACHE_PERIOD_SECONDS);
 
         return $iSeconds > 0
             ? $iSeconds
-            : static::CACHE_PERIOD_SECONDS;
+            : static::DEFAULT_CACHE_PERIOD_SECONDS;
     }
 
     /**
