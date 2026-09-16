@@ -12,6 +12,7 @@
 namespace Nails\GeoIp\Service;
 
 use Nails\Common\Traits\Caching;
+use Nails\Config;
 use Nails\Factory;
 use Nails\GeoIp\Constants;
 use Nails\GeoIp\Exception\GeoIpDriverException;
@@ -45,7 +46,19 @@ class GeoIp
     const DB_CACHE_TABLE = NAILS_DB_PREFIX . 'geoip_cache';
 
     /**
+     * How long a cached item is valid for, in seconds
+     */
+    const CACHE_PERIOD_SECONDS = 3600;
+
+    /**
+     * Config key for the cache period, in seconds
+     */
+    const CONFIG_CACHE_PERIOD = 'GEO_IP_CACHE_PERIOD';
+
+    /**
      * How long a cached item is valid for, MySQL DATE_SUB interval
+     *
+     * @deprecated Use cachePeriodSeconds() / GEO_IP_CACHE_PERIOD instead
      */
     const CACHE_PERIOD = '1 HOUR';
 
@@ -137,7 +150,7 @@ class GeoIp
         /** @var \Nails\Common\Service\Database $oDb */
         $oDb = Factory::service('Database');
         $oDb->where('ip', $sIp);
-        $oDb->where('created >', 'DATE_SUB(NOW(), INTERVAL ' . static::CACHE_PERIOD . ')', false);
+        $oDb->where('created >', static::cacheCutOff());
         $oDb->limit(1);
         $oResult = $oDb->get(self::DB_CACHE_TABLE)->row();
 
@@ -191,6 +204,32 @@ class GeoIp
         $this->setCache($sIp, $oIp);
 
         return $oIp;
+    }
+
+    // --------------------------------------------------------------------------
+
+    /**
+     * How long a cached item is valid for, in seconds
+     */
+    public static function cachePeriodSeconds(): int
+    {
+        $iSeconds = (int) Config::get(static::CONFIG_CACHE_PERIOD, static::CACHE_PERIOD_SECONDS);
+
+        return $iSeconds > 0
+            ? $iSeconds
+            : static::CACHE_PERIOD_SECONDS;
+    }
+
+    /**
+     * Timestamp before which a cached row is considered stale
+     */
+    public static function cacheCutOff(): string
+    {
+        /** @var \DateTime $oCutOff */
+        $oCutOff = Factory::factory('DateTime');
+        $oCutOff->sub(new \DateInterval('PT' . static::cachePeriodSeconds() . 'S'));
+
+        return $oCutOff->format('Y-m-d H:i:s');
     }
 
     // --------------------------------------------------------------------------
