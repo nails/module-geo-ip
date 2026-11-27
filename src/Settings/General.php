@@ -2,6 +2,7 @@
 
 namespace Nails\GeoIp\Settings;
 
+use Nails\GeoIp\Admin\Permission;
 use Nails\GeoIp\Service\Driver;
 use Nails\Common\Helper\Form;
 use Nails\Common\Interfaces;
@@ -30,9 +31,9 @@ class General implements Interfaces\Component\Settings
     /**
      * @inheritDoc
      */
-    public function getPermissions(): array
+    public function getPermission(): string
     {
-        return [];
+        return Permission\Settings\General::class;
     }
 
     // --------------------------------------------------------------------------
